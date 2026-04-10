@@ -26,13 +26,8 @@ bool waitAck() {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
 }
 
-static CanBusIndex getBusForSensor(uint8_t sensorIndex) {
-	// lambdaSensorSourceBus is 1-indexed: 1=Bus0, 2=Bus1
-	return config->lambdaSensorSourceBus[sensorIndex] == 2 ? CanBusIndex::Bus1 : CanBusIndex::Bus0;
-}
-
 void updateWidebandFirmware(uint8_t sensorIndex) {
-	CanBusIndex bus = getBusForSensor(sensorIndex);
+	CanBusIndex bus = static_cast<CanBusIndex>(config->lambdaSensorSourceBus[sensorIndex]);
 	uint8_t canIndex = config->lambdaSensorSourceIndex[sensorIndex];
 
 	// Clear any pending acks for this thread

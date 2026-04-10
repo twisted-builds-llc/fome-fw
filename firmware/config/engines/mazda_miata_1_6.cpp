@@ -322,7 +322,7 @@ void setMiataNa6_Polygonus() {
 
 	// Built in wideband controller on bus 2
 	engineConfiguration->widebandMode = WidebandMode::FOMEInternal;
-	config->lambdaSensorSourceBus[0] = 2;
+	config->lambdaSensorSourceBus[0] = 1;
 
 	// Outputs
 	engineConfiguration->fuelPumpPin = PROTEUS_LS_9;
