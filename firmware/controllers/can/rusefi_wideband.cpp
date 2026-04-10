@@ -26,6 +26,10 @@ bool waitAck() {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
 }
 
+static void setUpdateState(WidebandUpdateState state) {
+	engine->outputChannels.widebandUpdateState = static_cast<uint8_t>(state);
+}
+
 void updateWidebandFirmware(uint8_t sensorIndex) {
 	CanBusIndex bus = static_cast<CanBusIndex>(config->lambdaSensorSourceBus[sensorIndex]);
 	uint8_t canIndex = config->lambdaSensorSourceIndex[sensorIndex];
@@ -42,6 +46,7 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 	efiPrintf("Wideband Update: Rebooting to bootloader...");
 
 	engine->outputChannels.widebandUpdateProgress = 0;
+	setUpdateState(WidebandUpdateState::EnteringBootloader);
 
 	// First request: DLC=1 with target index. The wideband main firmware will only reset
 	// the controller with a matching CanIndexOffset, leaving others undisturbed.
@@ -52,6 +57,7 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 
 	if (!waitAck()) {
 		efiPrintf("Wideband Update ERROR: Expected ACK from targeted entry, didn't get one.");
+		setUpdateState(WidebandUpdateState::ErrorTargetedEntry);
 		return;
 	}
 
@@ -64,6 +70,7 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 
 	if (!waitAck()) {
 		efiPrintf("Wideband Update ERROR: Expected ACK from bootloader activation, didn't get one.");
+		setUpdateState(WidebandUpdateState::ErrorBootloaderActivation);
 		return;
 	}
 
@@ -71,6 +78,7 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 	chThdSleepMilliseconds(200);
 
 	efiPrintf("Wideband Update: in update mode, erasing flash...");
+	setUpdateState(WidebandUpdateState::ErasingFlash);
 
 	{
 		// Erase flash - opcode 1, magic value 0x5A5A
@@ -79,12 +87,14 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 
 	if (!waitAck()) {
 		efiPrintf("Wideband Update ERROR: Expected ACK from flash erase command, didn't get one.");
+		setUpdateState(WidebandUpdateState::ErrorFlashErase);
 		return;
 	}
 
 	size_t totalSize = sizeof(build_wideband_image_bin);
 
 	efiPrintf("Wideband Update: Flash erased! Sending %d bytes...", totalSize);
+	setUpdateState(WidebandUpdateState::SendingData);
 
 	// Send flash data 8 bytes at a time
 	for (size_t i = 0; i < totalSize; i += 8) {
@@ -95,6 +105,7 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 
 		if (!waitAck()) {
 			efiPrintf("Wideband Update ERROR: Expected ACK from data write, didn't get one.");
+			setUpdateState(WidebandUpdateState::ErrorDataWrite);
 			return;
 		}
 
@@ -102,6 +113,7 @@ void updateWidebandFirmware(uint8_t sensorIndex) {
 	}
 
 	engine->outputChannels.widebandUpdateProgress = 100;
+	setUpdateState(WidebandUpdateState::Complete);
 
 	efiPrintf("Wideband Update: Update complete! Rebooting controller.");
 
