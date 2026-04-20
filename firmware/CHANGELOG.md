@@ -43,6 +43,7 @@ or
  - Clearer ignition/injection pin naming in TunerStudio #596
 
 ### Fixed
+ - Prevent false ETB jam detection when the throttle is not being commanded (for example with "Disable ETB if engine is stopped" enabled), which could latch the throttle off permanently
  - TPS/PPS raw voltage now readable even when calibration is invalid, allowing users to calibrate sensors #710
  - Fix OpenBLT updating 1MB STM32F7-based ECUs
  - Improve RPM rate of change signal to idle control so the D-term is actually usable
