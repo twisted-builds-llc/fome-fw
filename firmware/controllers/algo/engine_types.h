@@ -409,6 +409,10 @@ enum class trigger_type_e : uint32_t {
 
 	TT_VVT_MIATA_NA = 76,
 
+	// Dodge Viper V10 crank: 90-degree V, one tooth per cylinder TDC on the crank wheel.
+	// Two teeth 18 degrees apart, repeated 5 times per crank revolution.
+	TT_VIPER_V10_CRANK = 77,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/fome_config.txt file to propogate new
 	// value to rusefi.ini TS project do not forget to invoke "gen_config.bat" once you make changes to
 	// integration/fome_config.txt todo: one day a hero would integrate some of these things into Makefile in order to
@@ -417,7 +421,7 @@ enum class trigger_type_e : uint32_t {
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run fome_test.exe from
 	// unit_tests
 	//
-	TT_UNUSED = 77, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 78, // this is used if we want to iterate over all trigger types
 };
 
 typedef enum {

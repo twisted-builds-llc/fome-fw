@@ -469,6 +469,10 @@ void TriggerWaveform::initializeTriggerWaveform(
 			initializeMazdaMiataNb2Crank(this);
 			break;
 
+		case trigger_type_e::TT_VIPER_V10_CRANK:
+			initializeViperV10Crank(this);
+			break;
+
 		case trigger_type_e::TT_DODGE_NEON_1995:
 		case trigger_type_e::TT_DODGE_NEON_1995_ONLY_CRANK:
 			configureNeon1995TriggerWaveformOnlyCrank(this);
