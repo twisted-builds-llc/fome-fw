@@ -447,6 +447,8 @@ constexpr inline const char* getTrigger_type_e(trigger_type_e value) {
 			return "TT_UNUSED";
 		case trigger_type_e::TT_UNUSED_17:
 			return "TT_UNUSED_17";
+		case trigger_type_e::TT_VIPER_V10_CRANK:
+			return "TT_VIPER_V10_CRANK";
 		case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
 			return "TT_VVT_BARRA_3_PLUS_1";
 		case trigger_type_e::TT_VVT_BOSCH_QUICK_START:
