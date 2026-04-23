@@ -234,6 +234,7 @@ jobs:
     - name: Upload bundle
       if: ${{ env.full == 'true' && env.upload == 'true' }}
       uses: actions/upload-artifact@v7
+      archive: false
       with:
         name: fome_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/fome_bundle_${{matrix.build-target}}.zip
