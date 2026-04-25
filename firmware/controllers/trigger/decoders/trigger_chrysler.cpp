@@ -564,7 +564,7 @@ void initializeViperV10Crank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	// Cylinder #1 TDC offset within the 720 degree engine cycle — adjust per install.
-	s->tdcPosition = 55;
+	s->tdcPosition = 0;
 
 	// Two teeth per 72 degree cycle give alternating 18/54 degree gaps.
 	// Sync tooth (end of cycle) arrives after the 54 degree gap: ratio 54/18 = 3.
