@@ -556,7 +556,7 @@ void configureChryslerNGC_36_2_2(TriggerWaveform* s) {
 }
 
 /**
- * Dodge Viper V10 crank wheel: 90 degree bank angle, one tooth at every cylinder TDC.
+ * 1996-2006 Dodge Viper V10 crank wheel: 90 degree bank angle, one tooth at every cylinder TDC.
  * Looking at rising edges only: two teeth 18 degrees apart, pattern repeats 5 times per crank
  * revolution (every 72 degrees). Cam signal resolves which of the 5 repeats we are in.
  */
