@@ -54,6 +54,20 @@ int brainPin_to_index(brain_pin_e brainPin) {
 /**
  * @return true if this pin was already used, false otherwise
  */
+/*The following code allows for multiple coil outputs on the same coil pin
+* only if the 1996-2006 Dodge Viper trigger pattern is selected
+*/
+static bool viperCoilPinShareAllowed(const char* existingUser, const char* requestedUser) {
+	if (existingUser == nullptr || requestedUser == nullptr) {
+		return false;
+	}
+
+	if (engineConfiguration->trigger.type != trigger_type_e::TT_VIPER_V10_CRANK) {
+		return false;
+	}
+
+	return strncmp(existingUser, "Coil ", 5) == 0 && strncmp(requestedUser, "Coil ", 5) == 0;
+}
 bool brain_pin_markUsed(brain_pin_e brainPin, const char* msg) {
 	int index = brainPin_to_index(brainPin);
 	if (index < 0) {
@@ -61,6 +75,10 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char* msg) {
 	}
 
 	if (getBrainUsedPin(index) != NULL) {
+		//Allow 1996-2006 Dodge Viper to use the same ign pin twice to make wasted spark work.
+		if (viperCoilPinShareAllowed(getBrainUsedPin(index), msg)) {
+			return true;
+		}
 		/* TODO: get readable name of brainPin... */
 		firmwareError(
 				ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1,
