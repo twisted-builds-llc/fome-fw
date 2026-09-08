@@ -30,7 +30,11 @@ or
 
 ## Unreleased
 
+### Breaking Changes
+ - The configuration layout changed to make room for the boost solenoid bench test settings, so your ECU will discard its stored tune when you update. Save your tune before flashing, and restore it afterwards.
+
 ### Added
+ - Boost control solenoid bench test: a "Boost Solenoid" button under Controller > Bench Test > Misc drives the wastegate solenoid output at a configurable duty cycle for a configurable duration, so you can hear it working without running the engine into boost. Duty and duration are set in the Boost Control dialog, defaulting to 50% for 5 seconds. The button requires boost control to be enabled, and the test is ignored while the engine is running.
  - Fahrenheit temperature support: pick "Fahrenheit" under Settings > Temperature Units in TunerStudio and all temperature gauges, datalogs, sensor adjustments, and thermistor calibration points display in °F. The stored tune is unchanged (always Celsius internally), so switching units never resets your configuration and works on every supported board.
  - Add mode for "true" wasted spark on odd fire engines (Viper V10) where companion cylinders are not exactly 360 degrees apart. Requires cam sync.
  - New `CPU usage` output channel showing approximate firmware CPU load

@@ -20,6 +20,9 @@ public:
 	void onFastCallback() override;
 	void resetLua();
 
+	// Drive the boost solenoid at a fixed duty for a while, so it can be heard/seen working
+	void startBenchTest();
+
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
 	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
@@ -36,6 +39,8 @@ public:
 private:
 	bool m_hasInitBoost = false;
 	bool m_shouldResetPid = false;
+
+	Timer m_benchTestTimer;
 
 	percent_t getClosedLoopImpl(float target, float manifoldPressure);
 

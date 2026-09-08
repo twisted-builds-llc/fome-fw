@@ -485,6 +485,7 @@ typedef enum {
 	BENCH_VVT_2_TARGET_BUMP,
 	BENCH_VVT_3_TARGET_BUMP,
 	BENCH_VVT_4_TARGET_BUMP,
+	BENCH_BOOST_VALVE,
 } bench_mode_e;
 
 typedef enum {

@@ -2,6 +2,8 @@ constexpr inline const char* getBench_mode_e(bench_mode_e value) {
 	switch (value) {
 		case BENCH_AC_COMPRESSOR_RELAY:
 			return "BENCH_AC_COMPRESSOR_RELAY";
+		case BENCH_BOOST_VALVE:
+			return "BENCH_BOOST_VALVE";
 		case BENCH_CANCEL:
 			return "BENCH_CANCEL";
 		case BENCH_CHECK_ENGINE_LIGHT:

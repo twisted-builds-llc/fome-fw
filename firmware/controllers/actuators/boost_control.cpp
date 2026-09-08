@@ -190,8 +190,19 @@ void BoostController::setOutput(expected<float> output) {
 	setEtbWastegatePosition(boostOutput);
 }
 
+void BoostController::startBenchTest() {
+	m_benchTestTimer.reset();
+}
+
 void BoostController::onFastCallback() {
 	if (!m_hasInitBoost) {
+		return;
+	}
+
+	// Bench test drives a fixed duty regardless of engine state, so the solenoid
+	// can be heard working with the engine stopped.
+	if (!m_benchTestTimer.hasElapsedSec(engineConfiguration->boostBenchDuration)) {
+		setOutput(engineConfiguration->boostBenchDuty);
 		return;
 	}
 
@@ -212,6 +223,8 @@ void BoostController::onFastCallback() {
 
 void setDefaultBoostParameters() {
 	engineConfiguration->boostPwmFrequency = 33;
+	engineConfiguration->boostBenchDuty = 50;
+	engineConfiguration->boostBenchDuration = 5;
 	engineConfiguration->boostPid.offset = 0;
 	engineConfiguration->boostPid.pFactor = 0.5;
 	engineConfiguration->boostPid.iFactor = 0.3;

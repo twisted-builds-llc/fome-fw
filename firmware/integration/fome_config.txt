@@ -1486,6 +1486,10 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 	torque_limiter_cfg[TORQUE_LIMITER_COUNT iterate] torqueLimiters;
 
+	! Boost solenoid bench test parameters
+	uint8_t boostBenchDuty;Duty cycle used by the boost solenoid bench test.;"%", 1, 0, 0, 100, 0
+	uint8_t boostBenchDuration;How long the boost solenoid bench test drives the output.;"sec", 1, 0, 1, 30, 0
+
 ! end of engine_configuration_s
 end_struct
 

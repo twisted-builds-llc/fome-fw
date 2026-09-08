@@ -135,3 +135,34 @@ TEST(BoostControl, SetOutput) {
 
 	bc.setOutput(25.0f);
 }
+
+TEST(BoostControl, BenchTest) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->isBoostControlEnabled = true;
+	engineConfiguration->boostBenchDuty = 50;
+	engineConfiguration->boostBenchDuration = 5;
+	engineConfiguration->boostControlSafeDutyCycle = 25;
+
+	StrictMock<MockPwm> pwm;
+	BoostController bc;
+	bc.init(&pwm, nullptr, nullptr, nullptr);
+
+	// Engine is stopped, so normally we get the safe duty cycle
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
+	bc.onFastCallback();
+
+	// Bench test drives the configured duty even though the engine is stopped
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.5f)).Times(2);
+	bc.startBenchTest();
+	bc.onFastCallback();
+
+	// Still running just before the configured duration elapses
+	eth.moveTimeForwardSec(4);
+	bc.onFastCallback();
+
+	// Once the duration elapses, control returns to normal
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
+	eth.moveTimeForwardSec(2);
+	bc.onFastCallback();
+}

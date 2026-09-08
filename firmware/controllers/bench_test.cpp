@@ -316,6 +316,12 @@ static void handleBenchCategory(uint16_t index) {
 			engine->module<VvtController4>()->setTargetOffset(engineConfiguration->vvtBumpAmount);
 			return;
 #endif // EFI_VVT_PID
+		case BENCH_BOOST_VALVE:
+			// Don't force the wastegate solenoid to a fixed duty while the engine is running
+			if (engine->rpmCalculator.isStopped()) {
+				engine->module<BoostController>()->startBenchTest();
+			}
+			return;
 		default:
 			firmwareError("Unexpected bench function %d", index);
 	}
